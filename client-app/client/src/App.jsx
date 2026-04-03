@@ -1,29 +1,29 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
-import { useModules } from './contexts/ModuleContext';
+import { useAuth } from './modules/login/contexts/AuthContext';
+import { useModules } from './modules/core/contexts/ModuleContext';
 
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Login from './modules/login/pages/Login';
+import Register from './modules/login/pages/Register';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
-import AdminDashboard from './pages/Admin/AdminDashboard';
+import AdminDashboard from './modules/admin/pages/AdminDashboard';
 import SuperAdminLogin from './pages/SuperAdmin/Login';
 import SuperAdminDashboard from './pages/SuperAdmin/Dashboard';
-import SectionsManager from './pages/Admin/SectionManager';
-import Catalog from './pages/Catalog';
-import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import OrderConfirmation from './pages/OrderConfirmation';
-import MyOrders from './pages/MyOrders';
-import OrderTracking from './pages/OrderTracking';
-import Profile from './pages/Profile';
-import Wishlist from './pages/Wishlist';
-import Services from './pages/Services';
-import ServiceDetail from './pages/ServiceDetail';
-import Booking from './pages/Booking';
-import MyBookings from './pages/MyBookings';
+import SectionsManager from './modules/landing/pages/SectionManager';
+import Catalog from './modules/ecommerce/pages/Catalog';
+import ProductDetail from './modules/ecommerce/pages/ProductDetail';
+import Cart from './modules/ecommerce/pages/Cart';
+import Checkout from './modules/ecommerce/pages/Checkout';
+import OrderConfirmation from './modules/ecommerce/pages/OrderConfirmation';
+import MyOrders from './modules/ecommerce/pages/MyOrders';
+import OrderTracking from './modules/ecommerce/pages/OrderTracking';
+import Profile from './modules/login/pages/Profile';
+import Wishlist from './modules/ecommerce/pages/Wishlist';
+import Services from './modules/appointments/pages/Services';
+import ServiceDetail from './modules/appointments/pages/ServiceDetail';
+import Booking from './modules/appointments/pages/Booking';
+import MyBookings from './modules/appointments/pages/MyBookings';
 
 
 

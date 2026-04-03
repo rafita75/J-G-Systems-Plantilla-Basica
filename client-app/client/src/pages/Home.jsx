@@ -1,11 +1,11 @@
 // client/src/pages/Home.jsx
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../modules/login/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import MainHeader from '../components/MainHeader';
-import Card from '../components/ui/Card';
-import Button from '../components/ui/Button';
-import api from '../services/api';
+import MainHeader from '../modules/core/components/Layout/MainHeader';
+import Card from '../modules/core/components/UI/Card';
+import Button from '../modules/core/components/UI/Button';
+import api from '../shared/services/api';
 
 export default function Home() {
   const { user, logout } = useAuth();

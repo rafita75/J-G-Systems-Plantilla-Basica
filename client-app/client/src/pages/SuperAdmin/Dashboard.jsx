@@ -1,8 +1,8 @@
 // src/pages/SuperAdmin/Dashboard.jsx
 import { useState, useEffect } from 'react';
-import api from '../../services/api';
+import api from '../../shared/services/api';
 import { useNavigate } from 'react-router-dom';
-import { useModules } from '../../contexts/ModuleContext';
+import { useModules } from '../../modules/core/contexts/ModuleContext';
 
 export default function SuperAdminDashboard() {
   const [config, setConfig] = useState(null);

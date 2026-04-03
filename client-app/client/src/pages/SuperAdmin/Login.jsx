@@ -1,6 +1,6 @@
 // src/pages/SuperAdmin/Login.jsx
 import { useState } from 'react';
-import api from '../../services/api';
+import api from '../../shared/services/api';
 import { useNavigate } from 'react-router-dom';
 
 export default function SuperAdminLogin() {

@@ -2,12 +2,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { AuthProvider } from './contexts/AuthContext';
-import { ModuleProvider } from './contexts/ModuleContext';
-import { SectionProvider } from './contexts/SectionContext';
-import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './modules/login/contexts/AuthContext';
+import { ModuleProvider } from './modules/core/contexts/ModuleContext';
+import { SectionProvider } from './modules/landing/contexts/SectionContext';
+import { CartProvider } from './modules/ecommerce/contexts/CartContext';
 import './index.css';
-import { WishlistProvider } from './contexts/WishlistContext';
+import { WishlistProvider } from './modules/ecommerce/contexts/WishlistContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
