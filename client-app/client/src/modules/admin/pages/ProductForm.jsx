@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { createProduct, updateProduct } from '../../../shared/services/productService';
 import Button from '../../core/components/UI/Button';
 import Input from '../../core/components/UI/Input';
+import MultiImageUpload from '../../../shared/components/upload/MultiImageUpload';
 
 export default function ProductForm({ product, categories, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
@@ -13,34 +14,27 @@ export default function ProductForm({ product, categories, onSuccess, onCancel }
     categoryId: product?.categoryId?._id || '',
     sku: product?.sku || '',
     isFeatured: product?.isFeatured || false,
-    thumbnail: product?.thumbnail || '',
     images: product?.images || []
-  });
-  const [imageUrls, setImageUrls] = useState(() => {
-    if (product?.images?.length) {
-      return product.images.map(img => img.url).join('\n');
-    }
-    return '';
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleImagesChange = (images) => {
+    setFormData(prev => ({
+      ...prev,
+      images: images
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     
-    const urls = imageUrls.split('\n').filter(url => url.trim());
-    const imagesArray = urls.map((url, index) => ({
-      url: url.trim(),
-      alt: formData.name,
-      order: index
-    }));
-    
     const submitData = {
       ...formData,
-      images: imagesArray,
-      thumbnail: formData.thumbnail || (imagesArray[0]?.url || '')
+      thumbnail: formData.images[0]?.url || '',
+      images: formData.images
     };
     
     try {
@@ -150,62 +144,17 @@ export default function ProductForm({ product, categories, onSuccess, onCancel }
           </div>
         </div>
         
-        {/* Múltiples imágenes */}
+        {/* Múltiples imágenes con Cloudinary */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Imágenes del producto (una URL por línea)
+            Imágenes del producto
           </label>
-          <textarea
-            value={imageUrls}
-            onChange={(e) => setImageUrls(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
-            rows="4"
-            placeholder="https://ejemplo.com/imagen1.jpg
-https://ejemplo.com/imagen2.jpg
-https://ejemplo.com/imagen3.jpg"
+          <MultiImageUpload
+            onImagesChange={handleImagesChange}
+            initialImages={formData.images}
+            label="Subir imágenes"
           />
-          <p className="text-xs text-gray-500 mt-1">
-            💡 La primera imagen será usada como miniatura
-          </p>
-          
-          {/* Vista previa de imágenes */}
-          {imageUrls && (
-            <div className="mt-4">
-              <p className="text-sm font-medium text-gray-700 mb-2">Vista previa:</p>
-              <div className="flex gap-2 flex-wrap">
-                {imageUrls.split('\n').filter(url => url.trim()).map((url, idx) => (
-                  <div key={idx} className="relative group">
-                    <img
-                      src={url.trim()}
-                      alt={`Preview ${idx + 1}`}
-                      className="w-20 h-20 object-cover rounded-xl border-2 border-gray-200 group-hover:border-primary-500 transition"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/80?text=Error';
-                      }}
-                    />
-                    {idx === 0 && (
-                      <span className="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full px-1.5 py-0.5 shadow-soft">
-                        Principal
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
-        
-        {/* Miniatura personalizada */}
-        <Input
-          label="Miniatura personalizada (opcional)"
-          name="thumbnail"
-          type="text"
-          value={formData.thumbnail}
-          onChange={handleChange}
-          placeholder="https://ejemplo.com/miniatura.jpg"
-          icon="🖼️"
-          helper="Si no especificas, se usará la primera imagen de la lista"
-        />
         
         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
           <input
