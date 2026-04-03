@@ -213,3 +213,23 @@ router.get('/related/:productId', async (req, res) => {
 
 module.exports = router;
 
+// ============================================
+// OBTENER PRODUCTO POR CÓDIGO DE BARRAS
+// ============================================
+router.get('/barcode/:code', async (req, res) => {
+  try {
+    const product = await Product.findOne({ 
+      barcode: req.params.code,
+      isActive: true 
+    }).populate('categoryId');
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al buscar por código de barras' });
+  }
+});

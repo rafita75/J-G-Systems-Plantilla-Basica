@@ -48,9 +48,20 @@ const ProductSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
+  barcode: {                    // ← NUEVO CAMPO
+    type: String,
+    unique: true,
+    sparse: true,
+    trim: true
+  },
   stock: {
     type: Number,
     default: 0,
+    min: 0
+  },
+  minStock: {                   // ← NUEVO CAMPO (para alertas)
+    type: Number,
+    default: 5,
     min: 0
   },
   trackStock: {
