@@ -11,6 +11,7 @@ import AccountingDashboard from '../../accounting/pages/AccountingDashboard';
 import BookingsManager from './BookinsManager';
 import ServicesManager from './ServicesManager';
 import SectionsManager from '../../landing/pages/SectionManager';
+import InventoryManager from '../../inventory/pages/InventoryManager';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -276,6 +277,21 @@ export default function AdminDashboard() {
             </>
           )}
 
+          {hasEcommerce &&  (
+            <>
+              <div className="border-t border-gray-700 my-3"></div>
+                <p className="text-xs text-gray-400 px-4 py-1">📦 INVENTARIO</p>
+                <button
+                  onClick={() => setActiveTab('inventory')}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-left ${
+                    activeTab === 'inventory' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                  }`}
+                >
+                  <span>📦</span>
+                  <span>Inventario</span>
+                </button>
+              </>
+          )}
           {/* Landing Page */}
           {hasLandingCustomization && (
             <>
@@ -438,6 +454,7 @@ export default function AdminDashboard() {
           {activeTab === 'services' && hasAppointments && <ServicesManager />}
           {activeTab === 'bookings' && hasAppointments && <BookingsManager />}
           {activeTab === 'landing' && hasLandingCustomization && <SectionsManager />}
+          {activeTab === 'inventory' && hasEcommerce && <InventoryManager />}
         </div>
       </main>
 
