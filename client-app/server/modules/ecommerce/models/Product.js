@@ -1,4 +1,4 @@
-// server/models/Product.js
+// server/modules/ecommerce/models/Product.js
 const mongoose = require('mongoose');
 
 const VariantSchema = new mongoose.Schema({

@@ -1,4 +1,4 @@
-// server/routes/products.js
+// server/modules/ecommerce/routes/products.js
 const express = require('express');
 const Product = require('../models/Product');
 const auth = require('../../login/middleware/auth');
