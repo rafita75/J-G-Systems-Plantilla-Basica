@@ -315,6 +315,17 @@ export default function AdminDashboard() {
                   <span>📦</span>
                   <span>Productos</span>
                 </button>
+                <button
+                  onClick={() => setActiveTab('categories')}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-left ${
+                    activeTab === 'categories' 
+                      ? 'bg-blue-600' 
+                      : 'hover:bg-gray-700'
+                  }`}
+                >
+                  <span>🏷️</span>
+                  <span>Categorías</span>
+                </button>
               </>
           )}
           {hasPOS && (
@@ -496,6 +507,7 @@ export default function AdminDashboard() {
           {activeTab === 'landing' && hasLandingCustomization && <SectionsManager />}
           {activeTab === 'inventory' && hasInventory && <InventoryManager />}
           {activeTab === 'products' && hasInventory && <ProductsManager />}
+          {activeTab === 'categories' && hasInventory && <CategoriesManager />}
           {activeTab === 'pos' && hasPOS && <POSDashboard />}
           {activeTab === 'employees' && user?.role === 'admin' && <EmployeesManager />}
 
