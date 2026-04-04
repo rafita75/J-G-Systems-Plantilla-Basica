@@ -2,13 +2,14 @@
 const express = require('express');
 const Product = require('../models/Product');
 const auth = require('../../login/middleware/auth');
+const { requirePermission } = require('../../../shared/middleware/permissions');  
 
 const router = express.Router();
 
 // ============================================
 // OBTENER TODOS LOS PRODUCTOS (público)
 // ============================================
-router.get('/', async (req, res) => {
+router.get('/', auth, requirePermission('viewProducts'), async (req, res) => {
   try {
     const { category, search, limit = 12, page = 1 } = req.query;
     const query = { isActive: true };
@@ -129,7 +130,7 @@ router.post('/', auth, async (req, res) => {
 // ============================================
 // ACTUALIZAR PRODUCTO (solo admin)
 // ============================================
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, requirePermission('editProducts'), async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'No autorizado' });
@@ -154,7 +155,7 @@ router.put('/:id', auth, async (req, res) => {
 // ============================================
 // ELIMINAR PRODUCTO (solo admin)
 // ============================================
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, requirePermission('deleteProducts'), async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'No autorizado' });

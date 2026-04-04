@@ -13,6 +13,7 @@ import ServicesManager from './ServicesManager';
 import SectionsManager from '../../landing/pages/SectionManager';
 import InventoryManager from '../../inventory/pages/InventoryManager';
 import POSDashboard from '../../pos/pages/POSDashboard';
+import EmployeesManager from './EmployeesManager';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -182,7 +183,17 @@ export default function AdminDashboard() {
             <span>🔌</span>
             <span>Módulos</span>
           </button>
-
+          {user?.role === 'admin' && (
+            <button
+              onClick={() => setActiveTab('employees')}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-left ${
+                activeTab === 'employees' ? 'bg-blue-600' : 'hover:bg-gray-700'
+              }`}
+            >
+              <span>👥</span>
+              <span>Empleados</span>
+            </button>
+          )}
           {/* Ecommerce */}
           {hasEcommerce && (
             <>
@@ -292,6 +303,17 @@ export default function AdminDashboard() {
                 >
                   <span>📦</span>
                   <span>Inventario</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('products')}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-left ${
+                    activeTab === 'products' 
+                      ? 'bg-blue-600' 
+                      : 'hover:bg-gray-700'
+                  }`}
+                >
+                  <span>📦</span>
+                  <span>Productos</span>
                 </button>
               </>
           )}
@@ -472,9 +494,11 @@ export default function AdminDashboard() {
           {activeTab === 'services' && hasAppointments && <ServicesManager />}
           {activeTab === 'bookings' && hasAppointments && <BookingsManager />}
           {activeTab === 'landing' && hasLandingCustomization && <SectionsManager />}
-          {activeTab === 'inventory' && hasEcommerce && <InventoryManager />}
+          {activeTab === 'inventory' && hasInventory && <InventoryManager />}
+          {activeTab === 'products' && hasInventory && <ProductsManager />}
           {activeTab === 'pos' && hasPOS && <POSDashboard />}
-          
+          {activeTab === 'employees' && user?.role === 'admin' && <EmployeesManager />}
+
         </div>
       </main>
 

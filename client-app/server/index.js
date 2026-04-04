@@ -75,6 +75,7 @@ app.use('/api/inventory', require('./modules/inventory/routes/inventory'));
 
 app.use('/api/pos', require('./modules/pos/routes/pos'));
 
+app.use('/api/employees', require('./modules/admin/routes/employees'));
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mi-app')
   .then(() => console.log('✅ Conectado a MongoDB'))

@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const { hasModule } = useModules();
   const loginEnabled = hasModule('login');
+  const [permissions, setPermissions] = useState(null);
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -40,6 +41,7 @@ export function AuthProvider({ children }) {
     const { data } = await api.post('/auth/login', { email, password });
     localStorage.setItem('token', data.token);
     setUser(data.user);
+    setPermissions(data.user.permissions);
     return data;
   };
 
@@ -48,6 +50,7 @@ export function AuthProvider({ children }) {
     const { data } = await api.post('/auth/register', { name, email, password, role });
     localStorage.setItem('token', data.token);
     setUser(data.user);
+    setPermissions(data.user.permissions);
     return data;
   };
 
@@ -55,11 +58,12 @@ export function AuthProvider({ children }) {
     console.log('🚪 Cerrando sesión - El carrito se conserva en localStorage');
     localStorage.removeItem('token');
     setUser(null);
+    setPermissions(null);
     // NO borramos 'cart' del localStorage
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, loginEnabled }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, loginEnabled, permissions }}>
       {children}
     </AuthContext.Provider>
   );

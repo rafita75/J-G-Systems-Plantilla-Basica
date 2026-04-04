@@ -78,6 +78,10 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ error: 'Credenciales incorrectas' });
     }
+
+    if (user.role === 'employee' && !user.isActive) {
+      return res.status(401).json({ error: 'Usuario desactivado. Contacta al administrador.' });
+    }
     
     // Asegurar que el token incluye name, email, role
     const token = jwt.sign(
@@ -97,7 +101,8 @@ router.post('/login', async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        permissions: user.permissions
       }
     });
   } catch (error) {

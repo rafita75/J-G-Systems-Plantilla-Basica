@@ -21,8 +21,48 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin', 'superadmin'],
+    enum: ['user', 'admin', 'employee', 'superadmin'],
     default: 'user'
+  },
+  permissions: {
+    // Productos
+    viewProducts: { type: Boolean, default: false },
+    createProducts: { type: Boolean, default: false },
+    editProducts: { type: Boolean, default: false },
+    deleteProducts: { type: Boolean, default: false },
+    
+    // Pedidos
+    viewOrders: { type: Boolean, default: false },
+    updateOrderStatus: { type: Boolean, default: false },
+    
+    // Reservas
+    viewAppointments: { type: Boolean, default: false },
+    createAppointments: { type: Boolean, default: false },
+    updateAppointmentStatus: { type: Boolean, default: false },
+    
+    // POS / Ventas
+    usePOS: { type: Boolean, default: false },
+    
+    // Contabilidad (solo lectura)
+    viewAccounting: { type: Boolean, default: false },
+    
+    // Clientes
+    viewCustomers: { type: Boolean, default: false },
+    
+    // Perfil propio
+    editOwnProfile: { type: Boolean, default: true },
+    
+    // Empleados (solo admin puede)
+    manageEmployees: { type: Boolean, default: false }
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  
+  isActive: {
+    type: Boolean,
+    default: true
   },
   // NUEVO: guardar dirección de envío
   shippingAddress: {
