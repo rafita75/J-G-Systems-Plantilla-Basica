@@ -72,6 +72,9 @@ app.use('/api/availability', require('./modules/appointments/routes/availability
 app.use('/api/appointments', require('./modules/appointments/routes/appointments'));
 
 app.use('/api/inventory', require('./modules/inventory/routes/inventory'));
+
+app.use('/api/pos', require('./modules/pos/routes/pos'));
+
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mi-app')
   .then(() => console.log('✅ Conectado a MongoDB'))

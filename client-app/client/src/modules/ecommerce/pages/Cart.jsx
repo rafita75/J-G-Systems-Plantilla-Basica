@@ -65,7 +65,7 @@ export default function Cart() {
   }
 
   const subtotal = cart.total;
-  const shipping = 0; // Por ahora
+  const shipping = 0;
   const total = subtotal + shipping;
 
   return (
@@ -74,7 +74,6 @@ export default function Cart() {
       
       <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="container mx-auto px-4 py-8">
-          {/* Header */}
           <div className="text-center mb-8 animate-slide-up">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Mi Carrito</h1>
             <p className="text-gray-500">{getItemCount()} {getItemCount() === 1 ? 'producto' : 'productos'} agregados</p>
@@ -112,6 +111,7 @@ export default function Cart() {
                             {item.variant && (
                               <p className="text-sm text-gray-500 mt-1">Variante: {item.variant}</p>
                             )}
+                            <p className="text-xs text-gray-400 mt-1">Stock disponible: {item.stock}</p>
                           </div>
                         </div>
                         
@@ -131,7 +131,13 @@ export default function Cart() {
                             </button>
                             <span className="w-12 text-center font-medium">{item.quantity}</span>
                             <button
-                              onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variant)}
+                              onClick={() => {
+                                if (item.quantity >= item.stock) {
+                                  alert(`⚠️ Solo hay ${item.stock} unidades disponibles de "${item.name}"`);
+                                  return;
+                                }
+                                updateQuantity(item.productId, item.quantity + 1, item.variant);
+                              }}
                               className="w-8 h-8 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center text-lg font-medium"
                             >
                               +

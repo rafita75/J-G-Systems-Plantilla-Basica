@@ -12,6 +12,7 @@ import BookingsManager from './BookinsManager';
 import ServicesManager from './ServicesManager';
 import SectionsManager from '../../landing/pages/SectionManager';
 import InventoryManager from '../../inventory/pages/InventoryManager';
+import POSDashboard from '../../pos/pages/POSDashboard';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -29,6 +30,8 @@ export default function AdminDashboard() {
   const hasAppointments = hasModule('appointments');
   const hasEcommerce = hasModule('ecommerce');
   const hasLandingCustomization = hasModule('landingCustomization');
+  const hasPOS = hasModule('pos');
+  const hasInventory = hasModule('inventory');
 
   useEffect(() => {
     loadData();
@@ -277,7 +280,7 @@ export default function AdminDashboard() {
             </>
           )}
 
-          {hasEcommerce &&  (
+          {hasInventory &&  (
             <>
               <div className="border-t border-gray-700 my-3"></div>
                 <p className="text-xs text-gray-400 px-4 py-1">📦 INVENTARIO</p>
@@ -291,6 +294,21 @@ export default function AdminDashboard() {
                   <span>Inventario</span>
                 </button>
               </>
+          )}
+          {hasPOS && (
+            <>
+              <div className="border-t border-gray-700 my-3"></div>
+              <p className="text-xs text-gray-400 px-4 py-1">💳 POS</p>
+              <button
+                onClick={() => setActiveTab('pos')}
+                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-left ${
+                  activeTab === 'pos' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                }`}
+              >
+                <span>💳</span>
+                <span>Punto de Venta</span>
+              </button>
+            </>
           )}
           {/* Landing Page */}
           {hasLandingCustomization && (
@@ -455,6 +473,8 @@ export default function AdminDashboard() {
           {activeTab === 'bookings' && hasAppointments && <BookingsManager />}
           {activeTab === 'landing' && hasLandingCustomization && <SectionsManager />}
           {activeTab === 'inventory' && hasEcommerce && <InventoryManager />}
+          {activeTab === 'pos' && hasPOS && <POSDashboard />}
+          
         </div>
       </main>
 

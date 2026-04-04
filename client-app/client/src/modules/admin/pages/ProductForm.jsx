@@ -11,8 +11,10 @@ export default function ProductForm({ product, categories, onSuccess, onCancel }
     description: product?.description || '',
     price: product?.price || '',
     stock: product?.stock || '',
-    categoryId: product?.categoryId?._id || '',
+    minStock: product?.minStock || 5,
+    barcode: product?.barcode || '',
     sku: product?.sku || '',
+    categoryId: product?.categoryId?._id || '',
     isFeatured: product?.isFeatured || false,
     images: product?.images || []
   });
@@ -88,6 +90,28 @@ export default function ProductForm({ product, categories, onSuccess, onCancel }
             onChange={handleChange}
             placeholder="Ej: CAM-001"
             icon="🔢"
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Código de barras"
+            name="barcode"
+            type="text"
+            value={formData.barcode}
+            onChange={handleChange}
+            placeholder="Ej: 7501000012345"
+            icon="📷"
+          />
+          
+          <Input
+            label="Stock mínimo (alerta)"
+            name="minStock"
+            type="number"
+            value={formData.minStock}
+            onChange={handleChange}
+            placeholder="5"
+            icon="⚠️"
           />
         </div>
         

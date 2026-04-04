@@ -9,7 +9,9 @@ const SiteConfigSchema = new mongoose.Schema({
     landingCustomization: { type: Boolean, default: false },
     ecommerce: { type: Boolean, default: false },
     accounting: { type: Boolean, default: false },
-    appointments: { type: Boolean, default: false } 
+    appointments: { type: Boolean, default: false },
+    inventory: { type: Boolean, default: false },
+    pos: { type: Boolean, default: false }
   },
   
   // Configuración general

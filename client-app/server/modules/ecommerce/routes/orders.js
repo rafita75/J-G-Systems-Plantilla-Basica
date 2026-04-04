@@ -97,32 +97,83 @@ router.put('/admin/:id/mark-paid', auth, async (req, res) => {
 // ============================================
 router.post('/', async (req, res) => {
   try {
-    console.log('=== ORDEN RECIBIDA EN BACKEND ===');
-    console.log('Body completo:', req.body);
-    console.log('paymentMethod:', req.body.paymentMethod);
-    console.log('paymentStatus:', req.body.paymentStatus);
+    const { customer, items, subtotal, shipping, discount, total, userId, couponCode, paymentMethod, paymentStatus, status } = req.body;
+    
+    const Product = require('../models/Product');
+    const StockMovement = require('../../inventory/models/StockMovement');
+    
+    // Validar stock
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ error: `Producto no encontrado: ${item.name}` });
+      }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ 
+          error: `Stock insuficiente para "${product.name}". Disponible: ${product.stock}`
+        });
+      }
+    }
     
     const orderNumber = await generateOrderNumber();
     
     const order = new Order({
       orderNumber,
-      customer: req.body.customer,
-      items: req.body.items,
-      subtotal: req.body.subtotal,
-      shipping: req.body.shipping || 0,
-      discount: req.body.discount || 0,
-      total: req.body.total,
-      userId: req.body.userId || null,
-      couponCode: req.body.couponCode || null,
-      paymentMethod: req.body.paymentMethod || 'cash',
-      paymentStatus: req.body.paymentStatus || 'pending',
-      status: req.body.status || 'pending'
+      customer,
+      items,
+      subtotal,
+      shipping: shipping || 0,
+      discount: discount || 0,
+      total,
+      userId: userId || null,
+      couponCode: couponCode || null,
+      paymentMethod: paymentMethod || 'cash',
+      paymentStatus: paymentStatus || 'pending',
+      status: status || 'pending'
     });
     
-    console.log('Orden a guardar - paymentMethod:', order.paymentMethod);
-    
     await order.save();
-    console.log('Orden guardada con paymentMethod:', order.paymentMethod);
+    
+    // Actualizar stock y registrar movimientos
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      const previousStock = product.stock;
+      const newStock = previousStock - item.quantity;
+      
+      product.stock = newStock;
+      await product.save();
+      
+      const movement = new StockMovement({
+        productId: product._id,
+        productName: product.name,
+        type: 'sale',
+        quantity: -item.quantity,
+        previousStock,
+        newStock,
+        reason: `Pedido ${orderNumber}`,
+        userId: userId || null
+      });
+      await movement.save();
+    }
+    
+    // ============================================
+    // SIEMPRE REGISTRAR EN CONTABILIDAD
+    // ============================================
+    const Income = require('../../accounting/models/Income');
+    
+    const income = new Income({
+      tipo: 'pedido_online',
+      monto: total,
+      descripcion: `Pedido online #${orderNumber}`,
+      metodo: paymentMethod === 'transfer' ? 'transferencia' : 'efectivo',
+      clienteNombre: customer.name,
+      clienteEmail: customer.email,
+      pedidoOnlineId: order._id,
+      esDeuda: paymentStatus !== 'paid',
+      notas: `Pedido ${orderNumber} - ${items.length} productos`,
+      creadoPor: userId || null
+    });
+    await income.save();
     
     res.status(201).json(order);
   } catch (error) {

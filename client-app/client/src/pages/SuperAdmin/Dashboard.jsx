@@ -102,7 +102,9 @@ export default function SuperAdminDashboard() {
   { key: 'landingCustomization', name: 'Personalización Landing', icon: '🎨' },
   { key: 'ecommerce', name: 'Ecommerce Completo', icon: '🛍️' },
   { key: 'accounting', name: 'Contabilidad', icon: '💰' },
-  { key: 'appointments', name: 'Reservas / Citas', icon: '📅' }
+  { key: 'appointments', name: 'Reservas / Citas', icon: '📅' },
+  { key: 'inventory', name: 'Inventario', icon: '📦' },
+  { key: 'pos', name: 'POS', icon: '💳' }
 ];
 
   return (

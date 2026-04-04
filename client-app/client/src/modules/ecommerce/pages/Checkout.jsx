@@ -89,6 +89,16 @@ export default function Checkout() {
     }
   };
 
+  const validateStock = () => {
+    for (const item of cart.items) {
+      if (item.quantity > item.stock) {
+        alert(`Stock insuficiente para "${item.name}". Solo hay ${item.stock} disponibles.`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Nombre requerido';
@@ -144,7 +154,17 @@ export default function Checkout() {
       setErrors(newErrors);
       return;
     }
+
+    if (!validateStock()) {
+      return;
+    }
     
+    if (paymentMethod === 'transfer') {
+      if (!validateTransfer()) {
+        alert('❌ Error al procesar el pedido. Intenta nuevamente.');
+        return;
+      }
+    }
     setLoading(true);
     
     try {

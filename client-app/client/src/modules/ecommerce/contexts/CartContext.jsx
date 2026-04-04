@@ -9,9 +9,6 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState({ items: [], total: 0 });
   const [isLoading, setIsLoading] = useState(true);
 
-  // ============================================
-  // CARGAR CARRITO DESDE LOCALSTORAGE AL INICIAR
-  // ============================================
   useEffect(() => {
     const loadCart = () => {
       try {
@@ -33,9 +30,6 @@ export function CartProvider({ children }) {
     loadCart();
   }, []);
 
-  // ============================================
-  // GUARDAR CARRITO EN LOCALSTORAGE CADA VEZ QUE CAMBIA
-  // ============================================
   useEffect(() => {
     if (!isLoading) {
       console.log('💾 Guardando carrito en localStorage:', cart);
@@ -43,18 +37,12 @@ export function CartProvider({ children }) {
     }
   }, [cart.items, isLoading]);
 
-  // ============================================
-  // CALCULAR TOTAL DEL CARRITO
-  // ============================================
   const calculateTotal = (items) => {
     const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     setCart(prev => ({ ...prev, total }));
     return total;
   };
 
-  // ============================================
-  // AGREGAR PRODUCTO AL CARRITO
-  // ============================================
   const addToCart = (product, quantity = 1, variant = null) => {
     console.log('➕ Agregando al carrito:', { product, quantity, variant });
     
@@ -66,14 +54,26 @@ export function CartProvider({ children }) {
       let newItems;
       
       if (existingItemIndex !== -1) {
-        // Actualizar cantidad si ya existe
+        const existingItem = prev.items[existingItemIndex];
+        const newQuantity = existingItem.quantity + quantity;
+        
+        // Validar que no exceda el stock
+        if (newQuantity > product.stock) {
+          alert(`⚠️ Solo puedes agregar hasta ${product.stock} unidades de "${product.name}". Ya tienes ${existingItem.quantity} en el carrito.`);
+          return prev;
+        }
+        
         newItems = [...prev.items];
         newItems[existingItemIndex] = {
-          ...newItems[existingItemIndex],
-          quantity: newItems[existingItemIndex].quantity + quantity
+          ...existingItem,
+          quantity: newQuantity
         };
       } else {
-        // Agregar nuevo item
+        if (quantity > product.stock) {
+          alert(`⚠️ Solo hay ${product.stock} unidades disponibles de "${product.name}"`);
+          return prev;
+        }
+        
         newItems = [...prev.items, {
           productId: product._id,
           name: product.name,
@@ -82,7 +82,7 @@ export function CartProvider({ children }) {
           quantity: quantity,
           image: product.thumbnail,
           variant: variant || null,
-          stock: variant?.stock || product.stock
+          stock: product.stock
         }];
       }
       
@@ -95,9 +95,6 @@ export function CartProvider({ children }) {
     });
   };
 
-  // ============================================
-  // REMOVER PRODUCTO DEL CARRITO
-  // ============================================
   const removeFromCart = (productId, variant = null) => {
     console.log('🗑️ Removiendo del carrito:', { productId, variant });
     
@@ -114,9 +111,6 @@ export function CartProvider({ children }) {
     });
   };
 
-  // ============================================
-  // ACTUALIZAR CANTIDAD DE UN PRODUCTO
-  // ============================================
   const updateQuantity = (productId, quantity, variant = null) => {
     if (quantity <= 0) {
       removeFromCart(productId, variant);
@@ -126,6 +120,14 @@ export function CartProvider({ children }) {
     console.log('📝 Actualizando cantidad:', { productId, quantity, variant });
     
     setCart(prev => {
+      const item = prev.items.find(i => i.productId === productId && i.variant === variant);
+      
+      // Validar que no exceda el stock
+      if (item && quantity > item.stock) {
+        alert(`⚠️ Solo hay ${item.stock} unidades disponibles de "${item.name}"`);
+        return prev;
+      }
+      
       const newItems = prev.items.map(item =>
         item.productId === productId && item.variant === variant
           ? { ...item, quantity }
@@ -140,26 +142,16 @@ export function CartProvider({ children }) {
     });
   };
 
-  // ============================================
-  // VACIAR CARRITO COMPLETAMENTE
-  // ============================================
   const clearCart = () => {
     console.log('🧹 Vaciar carrito');
     setCart({ items: [], total: 0 });
   };
 
-  // ============================================
-  // OBTENER NÚMERO TOTAL DE PRODUCTOS EN EL CARRITO
-  // ============================================
   const getItemCount = () => {
     return cart.items.reduce((sum, item) => sum + item.quantity, 0);
   };
 
-  // ============================================
-  // SINCRONIZAR CARRITO CON USUARIO (para futuro multi-tenant)
-  // ============================================
   const syncCartWithUser = () => {
-    // Por ahora solo retorna el carrito actual
     return cart;
   };
 

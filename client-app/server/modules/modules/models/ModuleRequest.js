@@ -5,7 +5,7 @@ const ModuleRequestSchema = new mongoose.Schema({
   moduleKey: {
     type: String,
     required: true,
-  enum: ['login', 'landingCustomization', 'ecommerce', 'accounting', 'appointments']
+  enum: ['login', 'landingCustomization', 'ecommerce', 'accounting', 'appointments', 'inventory', 'pos']
   },
   moduleName: {
     type: String,

@@ -56,6 +56,20 @@ router.get('/available', auth, async (req, res) => {
         icon: '📅', 
         description: 'Sistema de reservas', 
         price: 79 
+      },
+      { 
+        key: 'inventory', 
+        name: 'Inventario', 
+        icon: '📦', 
+        description: 'Sistema de inventario', 
+        price: 100 
+      },
+      { 
+        key: 'pos', 
+        name: 'POS', 
+        icon: '💳', 
+        description: 'Sistema de POS', 
+        price: 100 
       }
     ];
     
